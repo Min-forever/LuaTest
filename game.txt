@@ -1,3 +1,4 @@
 Game start
+I beat a monster
 A monster died
 Game over
