@@ -1,10 +1,3 @@
---[[
-    4、Lua面向对象实现，要点如下
-        a)、编写BaseClass实现lua的继承，父类至少有__init方法和__delete方法
-        b)、类的创建，调用New方法。类创建时，需要先调用父类的__init方法，后调用自己的__init方法
-        c)、类的销毁，调用DeleteMe方法。类销毁时，需要先调用父类的__delete方法，后调用自己的__delete方法
-]]
-
 -- 存储类的类型
 local _class = {}
 
@@ -33,7 +26,7 @@ function BaseClass(super)
 
         create(class_type, ...)
 
-        obj.DeleteMe = function(self)  -- 析构函数，只能将对象变为空表，完全删除对象需赋值nil
+        obj.Delete = function(self)  -- 析构函数，只能将对象变为空表，完全删除对象需赋值nil
             local now = class_type
             while now do
                 local super = now.super
@@ -43,7 +36,7 @@ function BaseClass(super)
                 now = super
             end
 
-            for k, v in pairs(self) do
+            for k in pairs(self) do
                 self[k] = nil
             end
 
@@ -69,7 +62,6 @@ function BaseClass(super)
         setmetatable(vtbl, {
             __index = function(t, k)
                 local ret = _class[super][k]
-                -- vtbl[k] = ret  -- 会导致父类的更改子类无法继承
                 return ret
             end
         })
